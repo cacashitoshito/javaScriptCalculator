@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Javascript Calculator</title>
+    <script>
+        let trailingResult = 0;
+let operationOptions = ['divide', 'multiply', 'subtract', 'add'];
+let workingOperation = "";
+
+function updateDisplay(input) {
+  let display = document.getElementById("display");
+  let secondaryDisplay = document.getElementById("secondaryDisplay");
+
+  if (display.innerHTML === "0" && operationOptions.indexOf(input) === -1) {
+    if (input === "decimal") {
+      display.innerHTML = "0.";
+    } else if (input === "negative-value") {
+      if (display.innerHTML.indexOf("-1") === -1) {
+        display.innerHTML = "-" + display.innerHTML
+      } else if (display.innerHTML.indexOf("-1" > -1)) {
+        display.innerHTML = display.innerHTML.slice(1, display.innerHTML.length);
+      }
+    } else {
+      display.innerHTML = input;
+    }
+  } else if (operationOptions.indexOf(input) >= 0) {
+    // console.log("Dealing with a operation");
+
+    if (trailingResult === display.innerHTML) {
+      // Operand button pressed twice exeception
+      workingOperation = input;
+    } else if (workingOperation === "") {
+      // Dealing without an operand
+      workingOperation = input;
+      trailingResult = display.innerHTML;
+      secondaryDisplay.innerHTML = trailingResult;
+      display.innerHTML = 0;
+    } else {
+      // Dealing with a set operand
+      // console.log(display.innerHTML, " Dealing with set operand");
+      trailingResult = calculate(trailingResult, display.innerHTML, workingOperation);
+      secondaryDisplay.innerHTML = trailingResult;
+      display.innerHTML = 0;
+      workingOperation = input;
+    }
+  } else if (input === "equals") {
+    display.innerHTML = calculate(trailingResult, display.innerHTML, workingOperation);
+    trailingResult = 0;
+    workingOperation = "";
+    secondaryDisplay.innerHTML = trailingResult;
+  } else if (input === "decimal") {
+    // console.log('decimal clicked');
+    if (display.innerHTML.indexOf(".") === -1) {
+      display.innerHTML += ".";
+    }
+    // console.log("decimal skipped because decimal already in number.");
+  } else if (input === "negative-value") {
+    // console.log("negative-value selected");
+    if (display.innerHTML.indexOf("-1") === -1) {
+      display.innerHTML = "-" + display.innerHTML
+    } else if (display.innerHTML.indexOf("-1" > -1)) {
+      display.innerHTML = display.innerHTML.slice(1, display.innerHTML.length);
+    }
+  } else {
+    display.innerHTML += input;
+  }
+  // 5 - 2 = / 2 =
+  // console.log(trailingResult, "<= trailingResult", display.innerHTML, " <= display.innerHTML", workingOperation, " <= workingOperation");
+}
+
+function clearDisplay() {
+  let display = document.getElementById("display");
+  let secondaryDisplay = document.getElementById("secondaryDisplay");
+  trailingResult = 0;
+  display.innerHTML = 0;
+  secondaryDisplay.innerHTML = trailingResult;
+}
+
+function calculate(firstNumber, secondNumber, operation) {
+  let result;
+  firstNumber = parseFloat(firstNumber);
+  secondNumber = parseFloat(secondNumber);
+  switch(operation) {
+    case "add":
+      // console.log("add calculated")
+      result = firstNumber + secondNumber;
+      break;
+    case "subtract":
+      // console.log("subtract calculated")
+      result = firstNumber - secondNumber;
+      break;
+    case "multiply":
+      // console.log("multiply calculated")
+      result = firstNumber * secondNumber;
+      break;
+    case "divide":
+      // console.log("divide calculated")
+      result = firstNumber / secondNumber;
+      break;
+    default:
+      console.log("Calculate switch statement missed something");
+  }
+  return result.toString();
+}
+    </script>
+  </head>
+
+  <body>
+    <div id="calculator">
+      <div id="display"></div>
+      <button id="clear" onclick="clearDisplay()">AC</button>
+      <button id="seven" onclick="updateDisplay(7)">7</button>
+      <button id="eight" onclick="updateDisplay(8)">8</button>
+      <button id="nine" onclick="updateDisplay(9)">9</button>
+
+      <button id="divide" onclick="updateDisplay('divide')">/</button>
+      <button id="four" onclick="updateDisplay(4)">4</button>
+      <button id="five" onclick="updateDisplay(5)">5</button>
+      <button id="six" onclick="updateDisplay(6)">6</button>
+
+      <button id="multiply" onclick="updateDisplay('multiply')">*</button>
+      <button id="one" onclick="updateDisplay(1)">1</button>
+      <button id="two" onclick="updateDisplay(2)">2</button>
+      <button id="three" onclick="updateDisplay(3)">3</button>
+
+      <button id="subtract" onclick="updateDisplay('subtract')">-</button>
+      <button id="zero" onclick="updateDisplay(0)">0</button>
+      <button id="decimal" onclick="updateDisplay('decimal')">.</button>
+      <button id="equals" onclick="updateDisplay('equals')">=</button>
+      <button id="add" onclick="updateDisplay('add')">+</button>
+      <div id="secondaryDisplay"></div>
+    </div>
+
+  </body>
+  <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</html>
